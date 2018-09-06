@@ -1,18 +1,36 @@
+//Imports
 var express = require('express');
-var app = express();
-// Added Templating Engine EJS
-app.set('view engine', 'ejs');
+var path = require('path');
+var bodyParser = require('body-parser');
 
-//Link of the server
-app.listen(3000, function () {
-    console.log('Our server is live on http://127.0.0.1:3000/');
+//Application
+var app = express();
+
+//Port
+var port = 3000;
+
+//Templating/View Engine EJS
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+//Link of the Server
+app.listen(port, function () {
+    console.log('The server is live on http://127.0.0.1:3000/');
 })
 
-//GET
-//POST
-//PUT
-//DELETE
+//Static Folder
+app.use(express.static(path.join(__dirname, 'client')));
 
+//Body Parser Middlewire
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended : false}));
+
+//Routing
+var index = require('./routes/home');
+var tasks = require('./routes/tasks');
+
+//Home Routing
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 })
