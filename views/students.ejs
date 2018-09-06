@@ -1,10 +1,24 @@
 <html>
-    <head>
 
-    </head>
+<head>
 
-    <body>
-        <h1> Your requested id is : <%= id %> </h1>
-        <h1> Your requested student is : <%= name %> </h1>
-    </body>
+</head>
+
+<body>
+    <h1> Your requested id is :
+        <%= id %>
+    </h1>
+    <h1> Your requested student is :
+        <%= name %>
+    </h1>
+    <h1> Subjects : </h1>
+    <ul>
+        <% subjects.forEach(function(item) { %>
+        <li>
+            <%= item %>
+        </li>
+        <% });%>
+    </ul>
+</body>
+
 </html>
