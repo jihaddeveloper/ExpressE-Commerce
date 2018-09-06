@@ -1,9 +1,11 @@
 var express = require('express');
-
 var app = express();
+// Added Templating Engine EJS
+app.set('view engine','ejs');
 
+//Link of the server
 app.listen(3000,function(){
-    console.log('Our server is live on 3000');
+    console.log('Our server is live on http://127.0.0.1:3000/');
 })
 
 //GET
@@ -35,5 +37,6 @@ var students={
 }
 
 app.get('/students/:id', function(req, res){
-    res.send('Your entered student id is : '+ students[req.params.id]);
+    //Rendering Template called students
+    res.render('students',{id : req.params.id,name : students[req.params.id]});
 })
