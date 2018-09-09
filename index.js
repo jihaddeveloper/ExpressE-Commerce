@@ -1,35 +1,46 @@
 //Imports
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+
+//DB Connection
+const {mongoose} = require('./dbConnection.js');
 
 //Application
-var app = express();
+const app = express();
 
 //Port
-var port = 3000;
-
-//Templating/View Engine EJS
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+const port = 3000;
 
 //Link of the Server
 app.listen(port, function () {
     console.log('The server is live on http://127.0.0.1:3000/');
 })
 
-//Static Folder
+//Templating/View Engine EJS
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+
+//Static Folder for Angular
 app.use(express.static(path.join(__dirname, 'client')));
 
 //Body Parser Middlewire
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}));
 
-//Routing
-var index = require('./routes/home');
-var tasks = require('./routes/tasks');
+//Routing Controllers
+var homeController = require('./controllers/homeController');
+var tasksController = require('./controllers/tasksController');
+var employeeController = require('./controllers/employeeController');
 
+//Routing
+app.use('/', homeController);
+app.use('/tasks', tasksController);
+app.use('/employees', employeeController);
+
+/*
 //Home Routing
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -46,7 +57,7 @@ app.get('/api', function (req, res) {
 app.get('/contact', function (req, res) {
     res.sendFile(__dirname + '/contact.html');
 })
-
+*/
 //Bulk Data
 var students = {
     1: {
