@@ -34,13 +34,13 @@ router.get('/:id', (req, res)=>{
 
 //To add An Employee's data
 router.post('/',(req, res)=>{
-    var emp = new Employee({
+    var employee = new Employee({
         name : req.body.name,
         position : req.body.position,
         office : req.body.office,
         salary : req.body.salary
     });
-    emp.save((err, docs)=>{
+    employee.save((err, docs)=>{
         if(!err){
             res.send(docs);
         }
@@ -55,13 +55,13 @@ router.put('/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
-    var emp = {
+    var employee = {
         name : req.body.name,
         position : req.body.position,
         office : req.body.office,
         salary : req.body.salary
     };
-    Employee.findByIdAndUpdate(req.params.id, {$set : emp}, {new : true},(err, doc)=>{
+    Employee.findByIdAndUpdate(req.params.id, {$set : employee}, {new : true},(err, doc)=>{
         if(!err){
             res.send(doc);
         }
@@ -76,7 +76,7 @@ router.delete('/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
-    Employee.findByIdAndRemove(req.params.id, {$set : emp}, {new : true},(err, doc)=>{
+    Employee.findByIdAndRemove(req.params.id, {$set : employee}, {new : true},(err, doc)=>{
         if(!err){
             res.send(doc);
         }
