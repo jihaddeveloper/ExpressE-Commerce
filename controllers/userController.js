@@ -3,24 +3,31 @@ const router = exppress.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
 //Import User Model
-var {User} = require('../models/user');
+var User = require('../models/user');
 
 //To add An User's data
 router.post('/',(req, res)=>{
-    var user = new User();
-    
-    user.username = req.body.username;
-    user.password = req.body.password;
-    user.email = req.body.email;
-    
-    user.save((err, docs)=>{
-        if(!err){
-            res.send(docs);
-        }
-        else{
-            console.log('Error in User Addition :'+ JSON.stringify(err, undefined, 2));
-        }
+    var user = new User({
+        username : req.body.username,
+        email : req.body.email,
+        password : req.body.password
     });
+
+    if(req.body.username == null || req.body.username == '' || req.body.email == null || req.body.email == '' || req.body.password == null || req.body.password == ''){
+        res.send('Ensure username, email and password were provided in correct format');
+    }
+    else{
+        user.save((err, docs)=>{
+            if(!err){
+                res.send(docs);
+            }
+            else{
+                res.send('Error in User Addition :'+ JSON.stringify(err, undefined, 2));
+            }
+        });
+    }
+    
+    
 });
 
 //To get all the Users

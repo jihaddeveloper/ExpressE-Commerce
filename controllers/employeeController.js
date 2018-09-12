@@ -3,7 +3,7 @@ var router = exppress.Router();
 var ObjectId = require('mongoose').Types.ObjectId;
 
 //Import Employee Model
-var {Employee} = require('../models/employee');
+var Employee = require('../models/employee');
 
 //To get all the Employees
 router.get('/',(req, res)=>{
