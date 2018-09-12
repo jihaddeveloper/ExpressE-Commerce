@@ -24,18 +24,16 @@ mongoose.connect('mongodb://localhost:27017/e-commerce', (err) =>{
         console.log('Error in DB connection :' + JSON.stringify(err, undefined, 2));
 });
 
-//Morgan to see Routes in shell/bash/command. 
-app.use(morgan('dev'));
-
-//Body Parser Middlewire
-//For paring JSON
-app.use(bodyParser.json());
+//Middlewires
+app.use(morgan('dev'));//Morgan to see Routes in shell/bash/command.
+app.use(bodyParser.json());//Body Parser Middlewire
 app.use(bodyParser.urlencoded({extended : true}));
 
 //Templating/View Engine EJS
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(__dirname + '/views/assests'));
 
 
 //Static Folder for Angular

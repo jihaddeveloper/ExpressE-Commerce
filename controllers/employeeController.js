@@ -6,7 +6,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var Employee = require('../models/employee');
 
 //To get all the Employees
-router.get('/',(req, res)=>{
+router.get('/all',(req, res)=>{
     Employee.find((err, docs)=>{
         if(!err){
             res.send(docs);
@@ -18,7 +18,7 @@ router.get('/',(req, res)=>{
 });
 
 //To get An Employee with ID
-router.get('/:id', (req, res)=>{
+router.get('/all/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
@@ -33,7 +33,7 @@ router.get('/:id', (req, res)=>{
 });
 
 //To add An Employee's data
-router.post('/',(req, res)=>{
+router.post('/add',(req, res)=>{
     var employee = new Employee({
         name : req.body.name,
         position : req.body.position,
@@ -51,7 +51,7 @@ router.post('/',(req, res)=>{
 });
 
 //Update Employee with ID
-router.put('/:id', (req, res)=>{
+router.put('/update/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
@@ -72,7 +72,7 @@ router.put('/:id', (req, res)=>{
 });
 
 //Delete An Employee with ID
-router.delete('/:id', (req, res)=>{
+router.delete('/delete/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }

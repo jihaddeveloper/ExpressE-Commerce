@@ -6,7 +6,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var User = require('../models/user');
 
 //To add An User's data
-router.post('/',(req, res)=>{
+router.post('/add',(req, res)=>{
     var user = new User({
         username : req.body.username,
         email : req.body.email,
@@ -31,7 +31,7 @@ router.post('/',(req, res)=>{
 });
 
 //To get all the Users
-router.get('/',(req, res)=>{
+router.get('/all',(req, res)=>{
     User.find((err, docs)=>{
         if(!err){
             res.send(docs);
@@ -43,7 +43,7 @@ router.get('/',(req, res)=>{
 });
 
 //To get An User with ID
-router.get('/:id', (req, res)=>{
+router.get('/all/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
@@ -58,7 +58,7 @@ router.get('/:id', (req, res)=>{
 });
 
 //Update User with ID
-router.put('/:id', (req, res)=>{
+router.put('/update/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
@@ -79,7 +79,7 @@ router.put('/:id', (req, res)=>{
 });
 
 //Delete An User with ID
-router.delete('/:id', (req, res)=>{
+router.delete('/delete/:id', (req, res)=>{
     if(!ObjectId.isValid(req.params.id)){
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
