@@ -6,8 +6,9 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var User = require('../models/user');
 
 //To add An User's data
-router.post('/add',(req, res)=>{
+router.post('/register',(req, res, next)=>{
     var user = new User({
+        name : req.body.name,
         username : req.body.username,
         email : req.body.email,
         password : req.body.password
@@ -27,7 +28,21 @@ router.post('/add',(req, res)=>{
         });
     }
     
-    
+});
+
+//Authenticate User
+router.get('/authenticate', (req, res, next)=>{
+    res.send('Authenticate');
+});
+
+//Profile of User
+router.get('/profile', (req, res, next)=>{
+    res.send('Profile');
+});
+
+//Validate User
+router.get('/validate', (req, res, next)=>{
+    res.send('Validate');
 });
 
 //To get all the Users
@@ -63,10 +78,9 @@ router.put('/update/:id', (req, res)=>{
         return res.status(400).send('No record found with given id : ' + `${req.params.id}`);
     }
     var user = {
-        name : req.body.name,
-        position : req.body.position,
-        office : req.body.office,
-        salary : req.body.salary
+        username : req.body.username,
+        email : req.body.email,
+        password : req.body.password
     };
     User.findByIdAndUpdate(req.params.id, {$set : user}, {new : true},(err, doc)=>{
         if(!err){

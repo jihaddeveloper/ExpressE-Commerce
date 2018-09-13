@@ -4,6 +4,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const cors = require('cors');
+const passport = require('passport');
+const config = require('./config/dbConnection');
 
 //Application
 const app = express();
@@ -17,7 +20,7 @@ app.listen(port, function () {
 });
 
 //DB Connection
-mongoose.connect('mongodb://localhost:27017/e-commerce', (err) =>{
+mongoose.connect(config.dbConnection, (err) =>{
     if(!err)
         console.log('MongoDB connection Established.');
     else
@@ -28,6 +31,7 @@ mongoose.connect('mongodb://localhost:27017/e-commerce', (err) =>{
 app.use(morgan('dev'));//Morgan to see Routes in shell/bash/command.
 app.use(bodyParser.json());//Body Parser Middlewire
 app.use(bodyParser.urlencoded({extended : true}));
+app.use(cors());
 
 //Templating/View Engine EJS
 app.engine('html', require('ejs').renderFile);
@@ -37,7 +41,7 @@ app.use(express.static(__dirname + '/views/assests'));
 
 
 //Static Folder for Angular
-app.use(express.static(path.join(__dirname, 'client')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 //Import Routing Controllers
