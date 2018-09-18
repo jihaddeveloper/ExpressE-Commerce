@@ -6,13 +6,14 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
-const config = require('./config/dbConnection');
+const dbConfig = require('./config/dbConnection');
+
 
 //Application
 const app = express();
 
 //Port
-const port = 3000;
+const port = 3000 || process.env.port;
 
 //Link of the Server
 app.listen(port, function () {
@@ -20,9 +21,9 @@ app.listen(port, function () {
 });
 
 //DB Connection
-mongoose.connect(config.dbConnection, (err) =>{
+mongoose.connect(dbConfig.dbConnection, (err) =>{
     if(!err)
-        console.log('MongoDB connection Established.');
+        console.log('MongoDB connection Established, '+dbConfig.dbConnection);
     else
         console.log('Error in DB connection :' + JSON.stringify(err, undefined, 2));
 });
@@ -32,6 +33,10 @@ app.use(morgan('dev'));//Morgan to see Routes in shell/bash/command.
 app.use(bodyParser.json());//Body Parser Middlewire
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(cors());
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./config/passport')(passport);
 
 //Templating/View Engine EJS
 app.engine('html', require('ejs').renderFile);
@@ -40,15 +45,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/views/assests'));
 
 
-//Static Folder for Angular
+//Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 //Import Routing Controllers
-var homeController = require('./controllers/homeController');
-var tasksController = require('./controllers/tasksController');
-var employeeController = require('./controllers/employeeController');
-var userController = require('./controllers/userController');
+const homeController = require('./controllers/homeController');
+const tasksController = require('./controllers/tasksController');
+const employeeController = require('./controllers/employeeController');
+const userController = require('./controllers/userController');
 
 
 //Routing

@@ -1,13 +1,14 @@
 const exppress = require('express');
 const router = exppress.Router();
-var ObjectId = require('mongoose').Types.ObjectId;
+const ObjectId = require('mongoose').Types.ObjectId;
+const dbConfig = require('../config/dbConnection');
 
 //Import User Model
-var User = require('../models/user');
+const User = require('../models/user');
 
 //To add An User's data
 router.post('/register',(req, res, next)=>{
-    var user = new User({
+    const newUser = new User({
         name : req.body.name,
         username : req.body.username,
         email : req.body.email,
@@ -18,7 +19,7 @@ router.post('/register',(req, res, next)=>{
         res.send('Ensure username, email and password were provided in correct format');
     }
     else{
-        user.save((err, docs)=>{
+        newUser.save((err, docs)=>{
             if(!err){
                 res.send(docs);
             }
@@ -31,8 +32,39 @@ router.post('/register',(req, res, next)=>{
 });
 
 //Authenticate User
-router.get('/authenticate', (req, res, next)=>{
-    res.send('Authenticate');
+router.post('/authenticate', (req, res, next)=>{
+    //res.send('Authenticate');
+    const username = req.body.username;
+    const password = req.body.password;
+
+    User.getUserByUsername(username, (err, user)=>{
+        if(err) throw err;
+        if(!user){
+            return res.json({success : false, msg: 'User not found'});
+        }
+
+        User.comparePassword(password, user.password, (err, isMatch)=>{
+            if(err) throw err;
+            if(isMatch){
+                const token = jwt.sign(user.toJSON(), dbConfig.secret, {
+                    expiresIn: 1800 // 1/2 hour(1hour = 60*60 secs)
+                });
+
+                res.json({
+                    success: true,
+                    token: 'JWT '+token,
+                    user:{
+                        id : user._id,
+                        name: user.name,
+                        username: user.username,
+                        email: user.email
+                    }
+                });
+            }else{
+                return res.json({success: false, msg: 'Wrong password'});
+            }
+        });
+    });
 });
 
 //Profile of User
@@ -106,7 +138,5 @@ router.delete('/delete/:id', (req, res)=>{
         }
     });
 });
-
-
 
 module.exports = router;
